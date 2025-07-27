@@ -37,10 +37,19 @@ export function AuthCard({ onAuthSuccess }: AuthCardProps) {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+
+    // Basic email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError("Please enter a valid email address.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const formData = new FormData(event.currentTarget);
       await signIn("email-otp", formData);
-      setStep({ email: formData.get("email") as string });
+      setStep({ email });
       setIsLoading(false);
     } catch (error) {
       console.error("Email sign-in error:", error);

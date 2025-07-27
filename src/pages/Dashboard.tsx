@@ -8,6 +8,14 @@ import { Loader2 } from "lucide-react";
 import VendorDashboard from "@/components/dashboard/VendorDashboard";
 import WholesalerDashboard from "@/components/dashboard/WholesalerDashboard";
 import InvestorDashboard from "@/components/dashboard/InvestorDashboard";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { CompleteProfileForm } from "@/components/auth/CompleteProfileForm";
 
 export default function Dashboard() {
   const { user, isLoading } = useAuth();
@@ -23,6 +31,8 @@ export default function Dashboard() {
     );
   }
 
+  const needsProfileCompletion = user && (!user.name || !user.role);
+
   const renderDashboard = () => {
     if (!user?.role) {
       return (
@@ -30,7 +40,7 @@ export default function Dashboard() {
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">Welcome to TrustTrade!</h2>
             <p className="text-muted-foreground">
-              Please contact support to set up your role.
+              Please complete your profile to continue.
             </p>
           </div>
         </div>
@@ -60,6 +70,18 @@ export default function Dashboard() {
 
   return (
     <Protected>
+      <Dialog open={!!needsProfileCompletion}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Complete Your Profile</DialogTitle>
+            <DialogDescription>
+              Welcome to TrustTrade! Please tell us a bit more about yourself to
+              get started.
+            </DialogDescription>
+          </DialogHeader>
+          <CompleteProfileForm onSuccess={() => {}} />
+        </DialogContent>
+      </Dialog>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

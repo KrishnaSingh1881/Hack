@@ -15,6 +15,7 @@ import type {
 } from "convex/server";
 import type * as auth_emailOtp from "../auth/emailOtp.js";
 import type * as auth from "../auth.js";
+import type * as generators_createDummyData from "../generators/createDummyData.js";
 import type * as generators_createSupplier from "../generators/createSupplier.js";
 import type * as groupBuys from "../groupBuys.js";
 import type * as http from "../http.js";
@@ -35,6 +36,7 @@ import type * as users from "../users.js";
 declare const fullApi: ApiFromModules<{
   "auth/emailOtp": typeof auth_emailOtp;
   auth: typeof auth;
+  "generators/createDummyData": typeof generators_createDummyData;
   "generators/createSupplier": typeof generators_createSupplier;
   groupBuys: typeof groupBuys;
   http: typeof http;
