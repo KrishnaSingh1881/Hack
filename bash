@@ -14,6 +14,9 @@ build/
 .DS_Store
 Thumbs.db" > .gitignore
 
+# Create the file
+touch .env.local
+
 # Add all files
 git add .
 
