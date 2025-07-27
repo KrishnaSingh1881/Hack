@@ -70,8 +70,8 @@ export default function Dashboard() {
 
   return (
     <Protected>
-      <Dialog open={!!needsProfileCompletion}>
-        <DialogContent>
+      <Dialog open={!!needsProfileCompletion} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-[425px]" onPointerDownOutside={(e) => e.preventDefault()}>
           <DialogHeader>
             <DialogTitle>Complete Your Profile</DialogTitle>
             <DialogDescription>
@@ -79,7 +79,7 @@ export default function Dashboard() {
               get started.
             </DialogDescription>
           </DialogHeader>
-          <CompleteProfileForm onSuccess={() => {}} />
+          <CompleteProfileForm onSuccess={() => window.location.reload()} />
         </DialogContent>
       </Dialog>
       <motion.div

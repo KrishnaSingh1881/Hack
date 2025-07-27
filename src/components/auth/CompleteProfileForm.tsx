@@ -54,53 +54,55 @@ export function CompleteProfileForm({ onSuccess }: { onSuccess: () => void }) {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Full Name</FormLabel>
-              <FormControl>
-                <Input placeholder="John Doe" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="role"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>I am a...</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+    <div className="space-y-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Full Name</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your role" />
-                  </SelectTrigger>
+                  <Input placeholder="John Doe" {...field} />
                 </FormControl>
-                <SelectContent>
-                  <SelectItem value="vendor">Vendor</SelectItem>
-                  <SelectItem value="wholesaler">Wholesaler</SelectItem>
-                  <SelectItem value="investor">Investor</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
-          {form.formState.isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...
-            </>
-          ) : (
-            "Save and Continue"
-          )}
-        </Button>
-      </form>
-    </Form>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>I am a...</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="vendor">Vendor</SelectItem>
+                    <SelectItem value="wholesaler">Wholesaler</SelectItem>
+                    <SelectItem value="investor">Investor</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
+            {form.formState.isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...
+              </>
+            ) : (
+              "Save and Continue"
+            )}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 }
