@@ -34,6 +34,19 @@ export const getCurrentUser = async (ctx: QueryCtx) => {
   return await ctx.db.get(userId);
 };
 
+export const getAll = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUser(ctx);
+    if (!user) {
+      return [];
+    }
+    const allUsers = await ctx.db.query("users").collect();
+    // Filter out the current user
+    return allUsers.filter((u) => u._id !== user._id);
+  },
+});
+
 export const updateProfile = mutation({
   args: {
     name: v.string(),

@@ -1,34 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
-import MapComponent from "./Map";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { Loader2 } from "lucide-react";
-import { Doc } from "@/convex/_generated/dataModel";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useMemo, useState } from "react";
-import GroupBuys from "./GroupBuys";
 import {
   Dialog,
   DialogContent,
@@ -44,12 +14,37 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { toast } from "sonner";
 import { ThemeToggle } from "../ThemeToggle";
+import AiChat from "./AiChat";
+import CommunityExchange from "./CommunityExchange";
+import GroupBuys from "./GroupBuys";
+import MapComponent from "./Map";
+import { api } from "@/convex/_generated/api";
+import { useMemo, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { Doc } from "@/convex/_generated/dataModel";
 
 const loanRequestSchema = z.object({
   amount: z.coerce.number().positive({ message: "Amount must be positive." }),
@@ -217,73 +212,27 @@ export default function VendorDashboard() {
         </div>
       </div>
       <Tabs defaultValue="suppliers">
-        <TabsList className="mb-4">
+        <TabsList>
           <TabsTrigger value="suppliers">Browse Suppliers</TabsTrigger>
           <TabsTrigger value="products">Browse Products</TabsTrigger>
-          <TabsTrigger value="orders">My Orders</TabsTrigger>
-          <TabsTrigger value="group-buys">Group Buys</TabsTrigger>
+          <TabsTrigger value="groupbuys">Group Buys</TabsTrigger>
           <TabsTrigger value="community">Community</TabsTrigger>
           <TabsTrigger value="chat">AI Chat</TabsTrigger>
         </TabsList>
         <TabsContent value="suppliers">
-          <Card>
-            <CardHeader>
-              <CardTitle>Suppliers Near You</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <MapComponent />
-            </CardContent>
-          </Card>
+          <MapComponent />
         </TabsContent>
         <TabsContent value="products">
-          <Card>
-            <CardHeader>
-              <CardTitle>All Products</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <AllProductsList />
-            </CardContent>
-          </Card>
+          <AllProductsList />
         </TabsContent>
-        <TabsContent value="orders">
-          <Card>
-            <CardHeader>
-              <CardTitle>My Orders</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Order history and tracking will be here.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="group-buys">
-          <Card>
-            <CardHeader>
-              <CardTitle>Group Buying</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <GroupBuys />
-            </CardContent>
-          </Card>
+        <TabsContent value="groupbuys">
+          <GroupBuys />
         </TabsContent>
         <TabsContent value="community">
-          <Card>
-            <CardHeader>
-              <CardTitle>Community Exchange</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Community features will be here.</p>
-            </CardContent>
-          </Card>
+          <CommunityExchange />
         </TabsContent>
         <TabsContent value="chat">
-          <Card>
-            <CardHeader>
-              <CardTitle>AI-Powered Chat</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>Multilingual chat with suppliers will be here.</p>
-            </CardContent>
-          </Card>
+          <AiChat />
         </TabsContent>
       </Tabs>
     </div>
