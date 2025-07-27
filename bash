@@ -1,6 +1,5 @@
-# 1. Get the code
-git clone https://github.com/KrishnaSingh1881/Hack.git
-cd Hack
+# 1. Get the latest code
+git pull
 
 # 2. Install dependencies
 pnpm install
@@ -14,6 +13,5 @@ npx convex run generators/createDummyData:createAll
 # 5. Start the app
 pnpm dev
 
-# 6. Deploy to Convex
-npx convex deploy
-pnpm dev
+openssl genpkey -algorithm RSA -out private-key.pem -pkcs8 -pass pass:mypassword
+cat private-key.pem
