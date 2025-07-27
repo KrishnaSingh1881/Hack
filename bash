@@ -1,56 +1,12 @@
-# Initialize git repository
-git init
+# If you already have the folder, run this
+git pull
 
-# Create .gitignore file
-echo "node_modules/
-.env
-.env.local
-.env.production
-.env.development
-dist/
-build/
-.convex/
-*.log
-.DS_Store
-Thumbs.db" > .gitignore
-
-# Create the file
-touch .env.local
-
-# Add all files
-git add .
-
-# First commit
-git commit -m "Initial commit: TrustTrade marketplace platform
-
-- Role-based dashboards (Vendor/Wholesaler/Investor)
-- Mapbox integration for supplier locations
-- Group buying system
-- Community exchange
-- AI-powered multilingual chat (Gemini)
-- Loan request/funding system
-- Dark mode toggle
-- Full authentication system"
-
-# Add GitHub remote
-git remote add origin https://github.com/YOUR_USERNAME/TrustTrade.git
-
-# Push to GitHub
-git push -u origin main
-
-# Add the README
-git add README.md
-git commit -m "Add comprehensive README with setup instructions"
-git push
-
-# Stop current server (Ctrl+C)
-# Then restart:
-pnpm dev
-
+# If you don't have the folder yet, run this
 git clone https://github.com/KrishnaSingh1881/Hack.git
 cd Hack
 
 pnpm install
 
-npx convex dev
 npx convex run generators/createDummyData:createAll
+
+pnpm dev
