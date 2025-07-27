@@ -5,14 +5,16 @@ import { Infer, v } from "convex/values";
 // default user roles. can add / remove based on the project as needed
 export const ROLES = {
   ADMIN: "admin",
-  USER: "user",
-  MEMBER: "member",
+  VENDOR: "vendor",
+  WHOLESALER: "wholesaler",
+  INVESTOR: "investor",
 } as const;
 
 export const roleValidator = v.union(
   v.literal(ROLES.ADMIN),
-  v.literal(ROLES.USER),
-  v.literal(ROLES.MEMBER),
+  v.literal(ROLES.VENDOR),
+  v.literal(ROLES.WHOLESALER),
+  v.literal(ROLES.INVESTOR)
 );
 export type Role = Infer<typeof roleValidator>;
 
@@ -30,14 +32,92 @@ const schema = defineSchema(
       isAnonymous: v.optional(v.boolean()), // is the user anonymous. do not remove
 
       role: v.optional(roleValidator), // role of the user. do not remove
+      trustScore: v.optional(v.number()),
     }).index("email", ["email"]), // index for the email. do not remove or modify
 
     // add other tables here
+    suppliers: defineTable({
+      name: v.string(),
+      location: v.object({
+        lat: v.number(),
+        lng: v.number(),
+      }),
+      deliveryRadius: v.number(),
+      ownerId: v.id("users"),
+    }).index("by_owner", ["ownerId"]),
 
-    // tableName: defineTable({
-    //   ...
-    //   // table fields
-    // }).index("by_field", ["field"])
+    products: defineTable({
+      name: v.string(),
+      supplierId: v.id("suppliers"),
+      bulkPrice: v.number(),
+      discount: v.optional(v.number()),
+      stock: v.number(),
+    }).index("by_supplier", ["supplierId"]),
+
+    orders: defineTable({
+      vendorId: v.id("users"),
+      productId: v.id("products"),
+      quantity: v.number(),
+      isGroupBuy: v.boolean(),
+      status: v.union(
+        v.literal("pending"),
+        v.literal("completed"),
+        v.literal("cancelled")
+      ),
+    })
+      .index("by_vendor", ["vendorId"])
+      .index("by_product", ["productId"]),
+
+    groupBuys: defineTable({
+      productId: v.id("products"),
+      participants: v.array(v.id("users")),
+      status: v.union(
+        v.literal("open"),
+        v.literal("closed"),
+        v.literal("completed")
+      ),
+    }).index("by_product", ["productId"]),
+
+    reviews: defineTable({
+      vendorId: v.id("users"),
+      supplierId: v.id("suppliers"),
+      rating: v.number(),
+      comment: v.optional(v.string()),
+    })
+      .index("by_vendor", ["vendorId"])
+      .index("by_supplier", ["supplierId"]),
+
+    loanRequests: defineTable({
+      vendorId: v.id("users"),
+      amount: v.number(),
+      repaymentStatus: v.union(
+        v.literal("pending"),
+        v.literal("paid"),
+        v.literal("defaulted")
+      ),
+      investorId: v.optional(v.id("users")),
+    })
+      .index("by_vendor", ["vendorId"])
+      .index("by_investor", ["investorId"]),
+
+    communityItems: defineTable({
+      vendorId: v.id("users"),
+      itemName: v.string(),
+      quantity: v.number(),
+      type: v.union(v.literal("exchange"), v.literal("request")),
+    }).index("by_vendor", ["vendorId"]),
+
+    messages: defineTable({
+      from: v.id("users"),
+      to: v.id("users"),
+      content: v.string(),
+      language: v.union(
+        v.literal("en"),
+        v.literal("hi"),
+        v.literal("mr")
+      ),
+    })
+      .index("by_from_to", ["from", "to"])
   },
   {
     schemaValidation: false,
