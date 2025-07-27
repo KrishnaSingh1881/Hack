@@ -57,6 +57,7 @@ const schema = defineSchema(
       bulkPrice: v.number(),
       discount: v.optional(v.number()),
       stock: v.number(),
+      unit: v.union(v.literal("kg"), v.literal("pieces"), v.literal("liters"), v.literal("grams")),
       ownerId: v.id("users"), // Direct ownership by user, no supplier needed
     }).index("by_owner", ["ownerId"]),
 
@@ -128,7 +129,46 @@ const schema = defineSchema(
         v.literal("mr")
       ),
     })
-      .index("by_from_to", ["from", "to"])
+      .index("by_from_to", ["from", "to"]),
+
+    // Zero-Waste Community Exchange
+    wasteListings: defineTable({
+      vendorId: v.id("users"),
+      itemName: v.string(),
+      quantity: v.number(),
+      unit: v.union(v.literal("kg"), v.literal("pieces"), v.literal("liters"), v.literal("grams")),
+      expiryDate: v.optional(v.string()), // ISO date string
+      location: v.optional(v.object({
+        lat: v.number(),
+        lng: v.number(),
+        address: v.optional(v.string()),
+      })),
+      desiredSwap: v.string(), // "barter" or "cash" or specific item
+      status: v.union(v.literal("available"), v.literal("reserved"), v.literal("completed")),
+      urgency: v.union(v.literal("low"), v.literal("medium"), v.literal("high")), // based on expiry
+      category: v.optional(v.string()), // food category for smart matching
+    }).index("by_vendor", ["vendorId"])
+      .index("by_status", ["status"])
+      .index("by_urgency", ["urgency"]),
+
+    // Green Points System
+    greenPoints: defineTable({
+      userId: v.id("users"),
+      points: v.number(),
+      earnedFrom: v.string(), // "waste_exchange", "successful_pickup", etc.
+      transactionId: v.optional(v.id("wasteListings")),
+    }).index("by_user", ["userId"]),
+
+    // Waste Exchange Notifications
+    wasteNotifications: defineTable({
+      recipientId: v.id("users"),
+      senderId: v.id("users"),
+      listingId: v.id("wasteListings"),
+      type: v.union(v.literal("new_listing"), v.literal("interest"), v.literal("pickup_reminder")),
+      message: v.string(),
+      read: v.boolean(),
+    }).index("by_recipient", ["recipientId"])
+      .index("by_read", ["read"]),
   },
   {
     schemaValidation: false,

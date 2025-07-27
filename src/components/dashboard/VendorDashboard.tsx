@@ -46,6 +46,7 @@ import { useMemo, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Doc } from "@/convex/_generated/dataModel";
 import { formatCurrency } from "@/lib/i18n";
+import ZeroWasteCommunity from "./ZeroWasteCommunity";
 
 const loanRequestSchema = z.object({
   amount: z.coerce.number().positive({ message: "Amount must be positive." }),
@@ -216,6 +217,7 @@ export default function VendorDashboard() {
         <TabsList>
           <TabsTrigger value="suppliers">Browse Suppliers</TabsTrigger>
           <TabsTrigger value="products">Browse Products</TabsTrigger>
+          <TabsTrigger value="zerowaste">🌱 Zero-Waste</TabsTrigger>
           <TabsTrigger value="groupbuys">Group Buys</TabsTrigger>
           <TabsTrigger value="community">Community</TabsTrigger>
           <TabsTrigger value="chat">AI Chat</TabsTrigger>
@@ -225,6 +227,9 @@ export default function VendorDashboard() {
         </TabsContent>
         <TabsContent value="products">
           <AllProductsList />
+        </TabsContent>
+        <TabsContent value="zerowaste">
+          <ZeroWasteCommunity />
         </TabsContent>
         <TabsContent value="groupbuys">
           <GroupBuys />

@@ -27,6 +27,7 @@ import type * as orders from "../orders.js";
 import type * as products from "../products.js";
 import type * as suppliers from "../suppliers.js";
 import type * as users from "../users.js";
+import type * as wasteExchange from "../wasteExchange.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -51,6 +52,7 @@ declare const fullApi: ApiFromModules<{
   products: typeof products;
   suppliers: typeof suppliers;
   users: typeof users;
+  wasteExchange: typeof wasteExchange;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

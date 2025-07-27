@@ -83,6 +83,7 @@ export const createAll = internalMutation({
       bulkPrice: 25,
       discount: 5,
       stock: 1000,
+      unit: "kg",
       ownerId: wholesaler1Id,
     });
 
@@ -91,6 +92,7 @@ export const createAll = internalMutation({
       bulkPrice: 80,
       discount: 10,
       stock: 500,
+      unit: "kg",
       ownerId: wholesaler2Id,
     });
 
@@ -98,6 +100,7 @@ export const createAll = internalMutation({
       name: "Cooking Oil",
       bulkPrice: 120,
       stock: 200,
+      unit: "liters",
       ownerId: wholesaler2Id,
     });
 
@@ -105,6 +108,7 @@ export const createAll = internalMutation({
       name: "Onions",
       bulkPrice: 30,
       stock: 800,
+      unit: "kg",
       ownerId: wholesaler1Id,
     });
 
@@ -113,6 +117,7 @@ export const createAll = internalMutation({
       bulkPrice: 200,
       discount: 15,
       stock: 100,
+      unit: "grams",
       ownerId: wholesaler2Id,
     });
 

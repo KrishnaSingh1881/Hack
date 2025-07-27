@@ -29,6 +29,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -42,6 +49,7 @@ const formSchema = z.object({
   bulkPrice: z.coerce.number().positive({ message: "Price must be positive." }),
   discount: z.coerce.number().min(0).optional(),
   stock: z.coerce.number().int().min(0, { message: "Stock can't be negative." }),
+  unit: z.enum(["kg", "pieces", "liters", "grams"], { message: "Please select a unit." }),
 });
 
 function AddProductForm({ onSuccess }: { onSuccess: () => void }) {
@@ -53,12 +61,19 @@ function AddProductForm({ onSuccess }: { onSuccess: () => void }) {
       bulkPrice: 0,
       discount: 0,
       stock: 0,
+      unit: "kg",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await createProduct(values);
+      await createProduct({
+        name: values.name,
+        bulkPrice: values.bulkPrice,
+        discount: values.discount,
+        stock: values.stock,
+        unit: values.unit,
+      });
       toast.success("Product added successfully!");
       form.reset();
       onSuccess();
@@ -84,19 +99,44 @@ function AddProductForm({ onSuccess }: { onSuccess: () => void }) {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="bulkPrice"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price per Unit (₹)</FormLabel>
-              <FormControl>
-                <Input type="number" placeholder="100" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="bulkPrice"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price per Unit (₹)</FormLabel>
+                <FormControl>
+                  <Input type="number" placeholder="100" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="unit"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Unit</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select unit" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="kg">Kilograms (kg)</SelectItem>
+                    <SelectItem value="grams">Grams (g)</SelectItem>
+                    <SelectItem value="pieces">Pieces</SelectItem>
+                    <SelectItem value="liters">Liters (L)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={form.control}
           name="discount"
@@ -181,15 +221,17 @@ export default function ProductListings() {
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Price</TableHead>
+              <TableHead>Unit</TableHead>
               <TableHead>Discount</TableHead>
               <TableHead>Stock</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product: Doc<"products">) => (
+            {products.map((product: any) => (
               <TableRow key={product._id}>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{formatCurrency(product.bulkPrice)}</TableCell>
+                <TableCell>{product.unit || "kg"}</TableCell>
                 <TableCell>{product.discount || 0}%</TableCell>
                 <TableCell>{product.stock}</TableCell>
               </TableRow>

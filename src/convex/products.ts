@@ -8,6 +8,7 @@ export const createDirect = mutation({
     bulkPrice: v.number(),
     discount: v.optional(v.number()),
     stock: v.number(),
+    unit: v.union(v.literal("kg"), v.literal("pieces"), v.literal("liters"), v.literal("grams")),
   },
   returns: v.id("products"),
   handler: async (ctx, args) => {
@@ -21,6 +22,7 @@ export const createDirect = mutation({
       bulkPrice: args.bulkPrice,
       discount: args.discount,
       stock: args.stock,
+      unit: args.unit,
       ownerId: user._id,
     });
   },
@@ -43,6 +45,7 @@ export const getByUser = query({
       bulkPrice: v.number(),
       discount: v.optional(v.number()),
       stock: v.number(),
+      unit: v.union(v.literal("kg"), v.literal("pieces"), v.literal("liters"), v.literal("grams")),
       ownerId: v.id("users"),
     })
   ),
