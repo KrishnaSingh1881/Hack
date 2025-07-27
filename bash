@@ -30,7 +30,7 @@ git commit -m "Initial commit: TrustTrade marketplace platform
 - Full authentication system"
 
 # Add GitHub remote
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+git remote add origin https://github.com/YOUR_USERNAME/TrustTrade.git
 
 # Push to GitHub
 git push -u origin main
