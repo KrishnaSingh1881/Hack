@@ -16,6 +16,7 @@ import type {
 import type * as auth_emailOtp from "../auth/emailOtp.js";
 import type * as auth from "../auth.js";
 import type * as communityItems from "../communityItems.js";
+import type * as exportProject from "../exportProject.js";
 import type * as generators_createDummyData from "../generators/createDummyData.js";
 import type * as generators_createSupplier from "../generators/createSupplier.js";
 import type * as groupBuys from "../groupBuys.js";
@@ -39,6 +40,7 @@ declare const fullApi: ApiFromModules<{
   "auth/emailOtp": typeof auth_emailOtp;
   auth: typeof auth;
   communityItems: typeof communityItems;
+  exportProject: typeof exportProject;
   "generators/createDummyData": typeof generators_createDummyData;
   "generators/createSupplier": typeof generators_createSupplier;
   groupBuys: typeof groupBuys;
