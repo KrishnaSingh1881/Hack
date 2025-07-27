@@ -39,3 +39,7 @@ git push -u origin main
 git add README.md
 git commit -m "Add comprehensive README with setup instructions"
 git push
+
+# Stop current server (Ctrl+C)
+# Then restart:
+pnpm dev
