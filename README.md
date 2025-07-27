@@ -1,29 +1,63 @@
-## Overview
+# TrustTrade 🤝
 
-This project uses the following tech stack:
-- Vite
-- Typescript
-- React Router v7 (all imports from `react-router` instead of `react-router-dom`)
-- React 19 (for frontend components)
-- Tailwind v4 (for styling)
-- Shadcn UI (for UI components library)
-- Lucide Icons (for icons)
-- Convex (for backend & database)
-- Convex Auth (for authentication)
-- Framer Motion (for animations)
+A comprehensive three-role marketplace platform designed to streamline raw material sourcing for small businesses, featuring AI-powered tools, interactive mapping, and a trust-based ecosystem.
 
-All relevant files live in the 'src' directory.
+## 🌟 Features
 
-## Setup
+### For Vendors
+- **Interactive Supplier Map** - Find nearby suppliers using Mapbox integration
+- **Group Buying** - Join forces with other vendors for bulk pricing
+- **Community Exchange** - Trade or request materials from other vendors
+- **Loan Requests** - Access funding from investors
+- **AI Chat** - Multilingual communication with auto-translation (Hindi, English, Marathi)
 
-This project is set up already and running on a cloud environment.
+### For Wholesalers
+- **Product Listings** - Manage inventory and pricing
+- **Order Management** - Track and fulfill orders
+- **Analytics Dashboard** - Monitor sales and performance
 
-To set it up yourself:
+### For Investors
+- **Loan Opportunities** - Browse and fund vendor loan requests
+- **Portfolio Tracking** - Monitor investments and returns
+- **Risk Assessment** - View vendor trust scores and history
 
-1. Clone the repository
-2. Run `pnpm install` to install the dependencies
-3. Run `pnpm dev` to start the development server
-4. Run `npx convex dev` to start the Convex development server
+## 🛠️ Tech Stack
+
+- **Frontend**: React 19, TypeScript, Tailwind CSS, Framer Motion
+- **Backend**: Convex (serverless database & functions)
+- **Authentication**: Convex Auth (Email OTP)
+- **Maps**: Mapbox GL JS with react-map-gl
+- **AI**: Google Gemini API for chat and translation
+- **UI Components**: Shadcn/ui
+- **Routing**: React Router v7
+- **Styling**: Tailwind CSS v4
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+- pnpm (recommended) or npm
+- Mapbox account (free tier available)
+- Google AI Studio account (free tier available)
+
+### Installation
+
+1. **Clone the repository**
+   
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   ```
+
+3. **Start the development server**
+   ```bash
+   pnpm dev
+   ```
+
+4. **Start the Convex development server**
+   ```bash
+   npx convex dev
+   ```
 
 Running the convex development server is critical for ensuring the backend convex functions are correctly updating.
 
@@ -34,7 +68,6 @@ The project is set up with project specific CONVEX_DEPLOYMENT and VITE_CONVEX_UR
 The convex server has a separate set of environment variables that are accessible by the convex backend.
 
 Currently, these variables include auth-specific keys: JWKS, JWT_PRIVATE_KEY, and SITE_URL.
-
 
 # Using Authentication (Important!)
 
@@ -133,7 +166,6 @@ Do not show anything else; always make sure to use the protected page lib.
 ## Auth Page
 
 The auth page is defined in `src/pages/Auth.tsx`.
-
 
 DO NOT USE THIS PAGE BY DEFAULT. Instead, you should use the `AuthButton` component defined in `src/components/auth/AuthButton.tsx`.
 
@@ -252,7 +284,6 @@ Add core functionality for signed-in users to be at `/dashboard` under the `src/
 
 Remember to update this page with the starting functionality.
 
-
 # Frontend Conventions
 
 You will be using the Vite frontend with React 19, Tailwind v4, and Shadcn UI.
@@ -352,7 +383,6 @@ Animate for all components, including on landing page and app pages.
 ## Three JS Graphics
 
 Your app comes with three js by default.
-
 
 ## Colors
 
@@ -474,7 +504,7 @@ Remember to import { toast } from "sonner". Usage: `toast("Event has been create
 
 Always ensure your larger dialogs have a scroll in its content to ensure that its content fits the screen size. Make sure that the content is not cut off from the screen.
 
-Ideally, instead of using a new page, use a Dialog instead. 
+Ideally, instead of using a new page, use a Dialog instead.
 
 # Using the Convex backend
 
@@ -541,7 +571,6 @@ export default schema;
 ```
 
 Follow the conventions above. Remember to correctly index your tables. Do not include the `_id` and `_creationTime` fields in your queries (it is included by default for each table).
-
 
 ## Common Convex Mistakes To Avoid
 
