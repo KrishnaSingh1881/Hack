@@ -25,6 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "../ThemeToggle";
 
 function LoanOpportunities() {
   const loanRequests = useQuery(api.loanRequests.getAllForInvestors);
@@ -141,7 +142,10 @@ function MyPortfolio() {
 export default function InvestorDashboard() {
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-3xl font-bold mb-6">Investor Dashboard</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Investor Dashboard</h1>
+        <ThemeToggle />
+      </div>
       <Tabs defaultValue="opportunities">
         <TabsList className="mb-4">
           <TabsTrigger value="opportunities">Loan Opportunities</TabsTrigger>

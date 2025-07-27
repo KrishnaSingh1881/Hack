@@ -6,16 +6,20 @@ import { AuthButton } from "@/components/auth/AuthButton";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ArrowRight, BarChart, Group, MessageSquare, ShieldCheck } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export default function Landing() {
   return (
     <div className="bg-background text-foreground">
       <header className="py-4 px-6 flex justify-between items-center">
         <h1 className="text-2xl font-bold">TrustTrade</h1>
-        <AuthButton
-          trigger={<Button>Get Started</Button>}
-          dashboardTrigger={<Button variant="ghost">Dashboard</Button>}
-        />
+        <div className="flex items-center gap-4">
+          <AuthButton
+            trigger={<Button>Get Started</Button>}
+            dashboardTrigger={<Button variant="ghost">Dashboard</Button>}
+          />
+          <ThemeToggle />
+        </div>
       </header>
 
       <main>

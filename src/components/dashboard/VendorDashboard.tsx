@@ -49,6 +49,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "convex/react";
 import { toast } from "sonner";
+import { ThemeToggle } from "../ThemeToggle";
 
 const loanRequestSchema = z.object({
   amount: z.coerce.number().positive({ message: "Amount must be positive." }),
@@ -200,17 +201,20 @@ export default function VendorDashboard() {
     <div className="p-4 md:p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Vendor Dashboard</h1>
-        <Dialog open={isLoanRequestOpen} onOpenChange={setLoanRequestOpen}>
-          <DialogTrigger asChild>
-            <Button>Request a Loan</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Request a New Loan</DialogTitle>
-            </DialogHeader>
-            <RequestLoanForm onSuccess={() => setLoanRequestOpen(false)} />
-          </DialogContent>
-        </Dialog>
+        <div className="flex items-center gap-4">
+          <Dialog open={isLoanRequestOpen} onOpenChange={setLoanRequestOpen}>
+            <DialogTrigger asChild>
+              <Button>Request a Loan</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Request a New Loan</DialogTitle>
+              </DialogHeader>
+              <RequestLoanForm onSuccess={() => setLoanRequestOpen(false)} />
+            </DialogContent>
+          </Dialog>
+          <ThemeToggle />
+        </div>
       </div>
       <Tabs defaultValue="suppliers">
         <TabsList className="mb-4">

@@ -6,11 +6,26 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import ProductListings from "./ProductListings";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { ThemeToggle } from "../ThemeToggle";
+
+const formSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  price: z.number().min(0, "Price must be greater than or equal to 0"),
+  quantity: z.number().min(0, "Quantity must be greater than or equal to 0"),
+});
+
+type AddProductForm = z.infer<typeof formSchema>;
 
 export default function WholesalerDashboard() {
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-3xl font-bold mb-6">Wholesaler Dashboard</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Wholesaler Dashboard</h1>
+        <ThemeToggle />
+      </div>
       <Tabs defaultValue="products">
         <TabsList className="mb-4">
           <TabsTrigger value="products">Product Listings</TabsTrigger>
