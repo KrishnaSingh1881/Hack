@@ -11,7 +11,7 @@ export default function Landing() {
   return (
     <div className="bg-background text-foreground">
       <header className="py-4 px-6 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Lovable</h1>
+        <h1 className="text-2xl font-bold">TrustTrade</h1>
         <AuthButton
           trigger={<Button>Get Started</Button>}
           dashboardTrigger={<Button variant="ghost">Dashboard</Button>}
@@ -34,7 +34,7 @@ export default function Landing() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8"
           >
-            Lovable is a platform that connects vendors, wholesalers, and
+            TrustTrade is a platform that connects vendors, wholesalers, and
             investors to streamline raw material sourcing and build a financial
             ecosystem of trust and transparency.
           </motion.p>
@@ -99,7 +99,7 @@ export default function Landing() {
       </main>
 
       <footer className="text-center py-8 px-4 border-t">
-        <p>&copy; {new Date().getFullYear()} Lovable. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} TrustTrade. All rights reserved.</p>
       </footer>
     </div>
   );
