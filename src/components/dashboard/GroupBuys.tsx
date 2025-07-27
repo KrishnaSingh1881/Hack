@@ -211,7 +211,7 @@ export default function GroupBuys() {
   const { user } = useAuth();
   const [isCreateOpen, setCreateOpen] = useState(false);
   const [joinDialogOpen, setJoinDialogOpen] = useState<string | null>(null);
-  const groupBuys = useQuery(api.groupBuys.getAll);
+  const groupBuys = useQuery(api.groupBuys.getByUser);
 
   if (!user) {
     return <div>Please log in to view group buys.</div>;

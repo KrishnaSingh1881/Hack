@@ -1,11 +1,142 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Loader2, ShieldCheck } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+
+function LoanOpportunities() {
+  const loanRequests = useQuery(api.loanRequests.getAllForInvestors);
+  const fundLoan = useMutation(api.loanRequests.fund);
+
+  const handleFundLoan = async (loanRequestId: string) => {
+    try {
+      await fundLoan({ loanRequestId: loanRequestId as any });
+      toast.success("Loan funded successfully!");
+    } catch (error) {
+      toast.error("Failed to fund loan.");
+      console.error(error);
+    }
+  };
+
+  if (loanRequests === undefined) {
+    return (
+      <div className="flex items-center justify-center h-40">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Vendor</TableHead>
+          <TableHead>Trust Score</TableHead>
+          <TableHead>Amount</TableHead>
+          <TableHead>Action</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {loanRequests.length > 0 ? (
+          loanRequests.map((request) => (
+            <TableRow key={request._id}>
+              <TableCell>{request.vendorName}</TableCell>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="h-5 w-5 text-green-500" />
+                  <span>{request.vendorTrustScore}</span>
+                </div>
+              </TableCell>
+              <TableCell>${request.amount.toFixed(2)}</TableCell>
+              <TableCell>
+                <Button size="sm" onClick={() => handleFundLoan(request._id)}>
+                  Fund Loan
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={4} className="text-center h-24">
+              No loan opportunities available at the moment.
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  );
+}
+
+function MyPortfolio() {
+  const fundedLoans = useQuery(api.loanRequests.getByInvestor);
+
+  if (fundedLoans === undefined) {
+    return (
+      <div className="flex items-center justify-center h-40">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Vendor</TableHead>
+          <TableHead>Amount</TableHead>
+          <TableHead>Status</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {fundedLoans.length > 0 ? (
+          fundedLoans.map((loan) => (
+            <TableRow key={loan._id}>
+              <TableCell>{loan.vendorName}</TableCell>
+              <TableCell>${loan.amount.toFixed(2)}</TableCell>
+              <TableCell>
+                <Badge
+                  variant={
+                    loan.repaymentStatus === "paid" ? "default" : "secondary"
+                  }
+                >
+                  {loan.repaymentStatus}
+                </Badge>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={3} className="text-center h-24">
+              You haven't funded any loans yet.
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
+  );
+}
 
 export default function InvestorDashboard() {
   return (
@@ -21,19 +152,25 @@ export default function InvestorDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Available Loan Requests</CardTitle>
+              <CardDescription>
+                Browse and fund loan requests from vendors.
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <p>Loan request listings will be here.</p>
+              <LoanOpportunities />
             </CardContent>
           </Card>
         </TabsContent>
         <TabsContent value="portfolio">
           <Card>
             <CardHeader>
-              <CardTitle>My Investments</CardTitle>
+              <CardTitle>Your Investments</CardTitle>
+              <CardDescription>
+                Track the status of your funded loans.
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <p>Portfolio tracking will be here.</p>
+              <MyPortfolio />
             </CardContent>
           </Card>
         </TabsContent>
@@ -41,9 +178,12 @@ export default function InvestorDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Investment Analytics</CardTitle>
+              <CardDescription>
+                Review your investment performance.
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <p>Investment analytics and reporting will be here.</p>
+              <p>Charts and stats about your investments will be here.</p>
             </CardContent>
           </Card>
         </TabsContent>

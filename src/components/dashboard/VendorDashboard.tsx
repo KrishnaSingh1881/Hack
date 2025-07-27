@@ -29,6 +29,81 @@ import {
 } from "@/components/ui/select";
 import { useMemo, useState } from "react";
 import GroupBuys from "./GroupBuys";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useMutation } from "convex/react";
+import { toast } from "sonner";
+
+const loanRequestSchema = z.object({
+  amount: z.coerce.number().positive({ message: "Amount must be positive." }),
+});
+
+function RequestLoanForm({ onSuccess }: { onSuccess: () => void }) {
+  const requestLoan = useMutation(api.loanRequests.create);
+  const form = useForm<z.infer<typeof loanRequestSchema>>({
+    resolver: zodResolver(loanRequestSchema),
+    defaultValues: {
+      amount: 0,
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof loanRequestSchema>) {
+    try {
+      await requestLoan({ amount: values.amount });
+      toast.success("Loan request submitted successfully!");
+      form.reset();
+      onSuccess();
+    } catch (error) {
+      toast.error("Failed to submit loan request.");
+      console.error(error);
+    }
+  }
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="amount"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Loan Amount</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="500.00" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...
+            </>
+          ) : (
+            "Submit Request"
+          )}
+        </Button>
+      </form>
+    </Form>
+  );
+}
 
 function AllProductsList() {
   const products = useQuery(api.products.getAll);
@@ -119,9 +194,24 @@ function AllProductsList() {
 }
 
 export default function VendorDashboard() {
+  const [isLoanRequestOpen, setLoanRequestOpen] = useState(false);
+
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-3xl font-bold mb-6">Vendor Dashboard</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Vendor Dashboard</h1>
+        <Dialog open={isLoanRequestOpen} onOpenChange={setLoanRequestOpen}>
+          <DialogTrigger asChild>
+            <Button>Request a Loan</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Request a New Loan</DialogTitle>
+            </DialogHeader>
+            <RequestLoanForm onSuccess={() => setLoanRequestOpen(false)} />
+          </DialogContent>
+        </Dialog>
+      </div>
       <Tabs defaultValue="suppliers">
         <TabsList className="mb-4">
           <TabsTrigger value="suppliers">Browse Suppliers</TabsTrigger>
