@@ -16,6 +16,7 @@ import type {
 import type * as auth_emailOtp from "../auth/emailOtp.js";
 import type * as auth from "../auth.js";
 import type * as generators_createSupplier from "../generators/createSupplier.js";
+import type * as groupBuys from "../groupBuys.js";
 import type * as http from "../http.js";
 import type * as loanRequests from "../loanRequests.js";
 import type * as orders from "../orders.js";
@@ -35,6 +36,7 @@ declare const fullApi: ApiFromModules<{
   "auth/emailOtp": typeof auth_emailOtp;
   auth: typeof auth;
   "generators/createSupplier": typeof generators_createSupplier;
+  groupBuys: typeof groupBuys;
   http: typeof http;
   loanRequests: typeof loanRequests;
   orders: typeof orders;

@@ -70,13 +70,18 @@ const schema = defineSchema(
 
     groupBuys: defineTable({
       productId: v.id("products"),
+      targetQuantity: v.number(),
+      currentQuantity: v.number(),
+      pricePerUnit: v.number(),
       participants: v.array(v.id("users")),
       status: v.union(
         v.literal("open"),
         v.literal("closed"),
         v.literal("completed")
       ),
-    }).index("by_product", ["productId"]),
+      createdBy: v.id("users"),
+    }).index("by_product", ["productId"])
+      .index("by_creator", ["createdBy"]),
 
     reviews: defineTable({
       vendorId: v.id("users"),
