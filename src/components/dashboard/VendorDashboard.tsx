@@ -6,6 +6,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
+import MapComponent from "./Map";
 
 export default function VendorDashboard() {
   return (
@@ -25,7 +26,8 @@ export default function VendorDashboard() {
               <CardTitle>Suppliers</CardTitle>
             </CardHeader>
             <CardContent>
-              <p>Supplier browsing and filtering will be here.</p>
+              <MapComponent />
+              <p className="mt-4">Supplier browsing and filtering will be here.</p>
             </CardContent>
           </Card>
         </TabsContent>
