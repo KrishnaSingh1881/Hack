@@ -1,16 +1,13 @@
-# 1. Get the latest code
-git pull
+# 1. Pull the latest fix
+git pull origin main
 
-# 2. Install dependencies
-pnpm install
-
-# 3. Deploy to Convex (will open browser)
+# 2. Deploy to Convex
 npx convex dev
 
-# 4. Add sample data
+# 3. Add sample data
 npx convex run generators/createDummyData:createAll
 
-# 5. Start the app
+# 4. Start the app
 pnpm dev
 
 openssl genpkey -algorithm RSA -out private-key.pem -pkcs8 -pass pass:mypassword

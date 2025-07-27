@@ -10,6 +10,24 @@ import { v } from "convex/values";
  */
 export const currentUser = query({
   args: {},
+  returns: v.union(
+    v.null(),
+    v.object({
+      _id: v.id("users"),
+      _creationTime: v.number(),
+      name: v.optional(v.string()),
+      email: v.optional(v.string()),
+      image: v.optional(v.string()),
+      role: v.optional(roleValidator),
+      trustScore: v.optional(v.number()),
+      location: v.optional(
+        v.object({
+          lat: v.number(),
+          lng: v.number(),
+        }),
+      ),
+    })
+  ),
   handler: async (ctx) => {
     const user = await getCurrentUser(ctx);
 
@@ -52,15 +70,55 @@ export const updateProfile = mutation({
     name: v.string(),
     role: roleValidator,
   },
+  returns: v.null(),
   handler: async (ctx, args) => {
-    const user = await getCurrentUser(ctx);
-    if (!user) {
-      throw new Error("User not authenticated");
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      throw new Error("Must be authenticated to update profile");
     }
 
-    await ctx.db.patch(user._id, {
-      name: args.name,
-      role: args.role,
-    });
+    // Check if user document exists, if not create it
+    const existingUser = await ctx.db.get(userId);
+    if (!existingUser) {
+      // Create the user document if it doesn't exist
+      await ctx.db.insert("users", {
+        _id: userId,
+        name: args.name,
+        role: args.role,
+        trustScore: 100, // Default trust score
+      });
+    } else {
+      // Update existing user
+      await ctx.db.patch(userId, {
+        name: args.name,
+        role: args.role,
+      });
+    }
+
+    return null;
+  },
+});
+
+export const syncAuthUser = mutation({
+  args: {},
+  returns: v.null(),
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      throw new Error("Must be authenticated");
+    }
+
+    // Check if user document exists
+    const existingUser = await ctx.db.get(userId);
+    if (!existingUser) {
+      // Create the user document with default values
+      await ctx.db.insert("users", {
+        _id: userId,
+        name: "New User",
+        trustScore: 100,
+      });
+    }
+
+    return null;
   },
 });
