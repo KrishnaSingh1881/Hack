@@ -1,0 +1,1 @@
+const projectData = JSON.parse(fs.readFileSync('TrustTrade-Project-2023-10-27.json', 'utf8'));
