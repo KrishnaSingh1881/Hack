@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "../ThemeToggle";
 import { formatCurrency } from "@/lib/i18n";
+import MapComponent from "./Map";
 
 function LoanOpportunities() {
   const loanRequests = useQuery(api.loanRequests.getAllForInvestors);
@@ -151,6 +152,7 @@ export default function InvestorDashboard() {
         <TabsList className="mb-4">
           <TabsTrigger value="opportunities">Loan Opportunities</TabsTrigger>
           <TabsTrigger value="portfolio">My Portfolio</TabsTrigger>
+          <TabsTrigger value="map">Market Map</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
         <TabsContent value="opportunities">
@@ -176,6 +178,16 @@ export default function InvestorDashboard() {
             </CardHeader>
             <CardContent>
               <MyPortfolio />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="map">
+          <Card>
+            <CardHeader>
+              <CardTitle>Market Map</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <MapComponent />
             </CardContent>
           </Card>
         </TabsContent>

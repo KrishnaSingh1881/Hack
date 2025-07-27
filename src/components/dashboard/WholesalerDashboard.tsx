@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ThemeToggle } from "../ThemeToggle";
+import MapComponent from "./Map";
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -30,6 +31,7 @@ export default function WholesalerDashboard() {
         <TabsList className="mb-4">
           <TabsTrigger value="products">Product Listings</TabsTrigger>
           <TabsTrigger value="orders">Incoming Orders</TabsTrigger>
+          <TabsTrigger value="map">Map View</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
         <TabsContent value="products">
@@ -49,6 +51,16 @@ export default function WholesalerDashboard() {
             </CardHeader>
             <CardContent>
               <p>View and manage orders from vendors.</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="map">
+          <Card>
+            <CardHeader>
+              <CardTitle>Market Map</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <MapComponent />
             </CardContent>
           </Card>
         </TabsContent>

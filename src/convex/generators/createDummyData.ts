@@ -27,18 +27,21 @@ export const createAll = internalMutation({
       email: "raju.chaat@example.com",
       role: ROLES.VENDOR,
       trustScore: 85,
+      location: { lat: 19.079, lng: 72.875 }, // Near Mumbai
     });
     const vendor2Id = await ctx.db.insert("users", {
       name: "Priya's Vada Pav",
-      email: "priya.vada@example.com", 
+      email: "priya.vada@example.com",
       role: ROLES.VENDOR,
       trustScore: 92,
+      location: { lat: 19.073, lng: 72.88 }, // Near Mumbai
     });
     const vendor3Id = await ctx.db.insert("users", {
       name: "Sanjay's Samosas",
       email: "sanjay.samosa@example.com",
       role: ROLES.VENDOR,
       trustScore: 78,
+      location: { lat: 28.7041, lng: 77.1025 }, // Near Delhi
     });
 
     // --- WHOLESALERS ---

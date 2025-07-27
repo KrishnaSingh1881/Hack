@@ -21,6 +21,7 @@ import type * as generators_createSupplier from "../generators/createSupplier.js
 import type * as groupBuys from "../groupBuys.js";
 import type * as http from "../http.js";
 import type * as loanRequests from "../loanRequests.js";
+import type * as map from "../map.js";
 import type * as messages from "../messages.js";
 import type * as orders from "../orders.js";
 import type * as products from "../products.js";
@@ -44,6 +45,7 @@ declare const fullApi: ApiFromModules<{
   groupBuys: typeof groupBuys;
   http: typeof http;
   loanRequests: typeof loanRequests;
+  map: typeof map;
   messages: typeof messages;
   orders: typeof orders;
   products: typeof products;
