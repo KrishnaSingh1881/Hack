@@ -46,3 +46,11 @@ git push
 # Stop current server (Ctrl+C)
 # Then restart:
 pnpm dev
+
+git clone https://github.com/KrishnaSingh1881/Hack.git
+cd Hack
+
+pnpm install
+
+npx convex dev
+npx convex run generators/createDummyData:createAll
