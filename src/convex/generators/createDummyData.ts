@@ -78,40 +78,47 @@ export const createAll = internalMutation({
     });
 
     // --- PRODUCTS ---
-    const potatoId = await ctx.db.insert("products", {
-      name: "Potatoes (per kg)",
-      supplierId: supplier2Id,
-      bulkPrice: 30,
-      stock: 5000,
+    const product1Id = await ctx.db.insert("products", {
+      name: "Potatoes",
+      bulkPrice: 25,
+      discount: 5,
+      stock: 1000,
+      ownerId: wholesaler1Id,
     });
-    const besanId = await ctx.db.insert("products", {
-      name: "Gram Flour (Besan) (per kg)",
-      supplierId: supplier1Id,
+
+    const product2Id = await ctx.db.insert("products", {
+      name: "Gram Flour (Besan)",
       bulkPrice: 80,
-      stock: 2000,
-    });
-    await ctx.db.insert("products", {
-      name: "Cooking Oil (per litre)",
-      supplierId: supplier1Id,
-      bulkPrice: 150,
-      stock: 1500,
-    });
-    await ctx.db.insert("products", {
-      name: "Onions (per kg)",
-      supplierId: supplier2Id,
-      bulkPrice: 40,
-      stock: 3000,
-    });
-    await ctx.db.insert("products", {
-      name: "Mixed Spices (Chaat Masala) (per kg)",
-      supplierId: supplier1Id,
-      bulkPrice: 400,
+      discount: 10,
       stock: 500,
+      ownerId: wholesaler2Id,
+    });
+
+    const product3Id = await ctx.db.insert("products", {
+      name: "Cooking Oil",
+      bulkPrice: 120,
+      stock: 200,
+      ownerId: wholesaler2Id,
+    });
+
+    const product4Id = await ctx.db.insert("products", {
+      name: "Onions",
+      bulkPrice: 30,
+      stock: 800,
+      ownerId: wholesaler1Id,
+    });
+
+    const product5Id = await ctx.db.insert("products", {
+      name: "Mixed Spices",
+      bulkPrice: 200,
+      discount: 15,
+      stock: 100,
+      ownerId: wholesaler2Id,
     });
 
     // --- GROUP BUYS ---
     await ctx.db.insert("groupBuys", {
-      productId: potatoId,
+      productId: product1Id,
       targetQuantity: 500,
       currentQuantity: 120,
       pricePerUnit: 25,
@@ -120,7 +127,7 @@ export const createAll = internalMutation({
       createdBy: vendor1Id,
     });
     await ctx.db.insert("groupBuys", {
-      productId: besanId,
+      productId: product2Id,
       targetQuantity: 200,
       currentQuantity: 200,
       pricePerUnit: 75,

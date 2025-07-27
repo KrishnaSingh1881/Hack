@@ -44,14 +44,8 @@ const formSchema = z.object({
   stock: z.coerce.number().int().min(0, { message: "Stock can't be negative." }),
 });
 
-function AddProductForm({
-  supplierId,
-  onSuccess,
-}: {
-  supplierId: string;
-  onSuccess: () => void;
-}) {
-  const createProduct = useMutation(api.products.create);
+function AddProductForm({ onSuccess }: { onSuccess: () => void }) {
+  const createProduct = useMutation(api.products.createDirect);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,10 +58,7 @@ function AddProductForm({
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await createProduct({
-        supplierId: supplierId as any, // Assuming supplierId is valid Id<"suppliers">
-        ...values,
-      });
+      await createProduct(values);
       toast.success("Product added successfully!");
       form.reset();
       onSuccess();
@@ -87,7 +78,7 @@ function AddProductForm({
             <FormItem>
               <FormLabel>Product Name</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., Cotton Fabric" {...field} />
+                <Input placeholder="e.g., Fresh Potatoes" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -98,7 +89,7 @@ function AddProductForm({
           name="bulkPrice"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Bulk Price (per unit)</FormLabel>
+              <FormLabel>Price per Unit (₹)</FormLabel>
               <FormControl>
                 <Input type="number" placeholder="100" {...field} />
               </FormControl>
@@ -149,34 +140,7 @@ function AddProductForm({
 export default function ProductListings() {
   const { user } = useAuth();
   const [isAddProductOpen, setAddProductOpen] = useState(false);
-  const suppliers = useQuery(api.suppliers.getByOwner, user ? { ownerId: user._id } : "skip");
-  
-  // Assuming one supplier per wholesaler for now
-  const supplier = suppliers?.[0];
-
-  const products = useQuery(
-    api.products.getBySupplier,
-    supplier ? { supplierId: supplier._id } : "skip"
-  );
-
-  if (suppliers === undefined) {
-    return (
-      <div className="flex flex-col items-center justify-center h-40 gap-4">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        <p className="text-muted-foreground">Loading your supplier data...</p>
-      </div>
-    );
-  }
-
-  if (!supplier) {
-    return (
-      <div className="text-center py-10 border-2 border-dashed rounded-lg">
-        <p className="text-muted-foreground">You don't have a supplier profile yet.</p>
-        <p className="text-sm text-muted-foreground">Please create one to add products.</p>
-        {/* TODO: Add a button to create a supplier profile */}
-      </div>
-    )
-  }
+  const products = useQuery(api.products.getByUser, user ? { userId: user._id } : "skip");
 
   return (
     <div>
@@ -193,24 +157,24 @@ export default function ProductListings() {
             <DialogHeader>
               <DialogTitle>Add a New Product</DialogTitle>
             </DialogHeader>
-            <AddProductForm
-              supplierId={supplier._id}
-              onSuccess={() => setAddProductOpen(false)}
-            />
+            <AddProductForm onSuccess={() => setAddProductOpen(false)} />
           </DialogContent>
         </Dialog>
       </div>
+      
       {products === undefined && (
         <div className="flex items-center justify-center h-40">
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       )}
+      
       {products && products.length === 0 && (
         <div className="text-center py-10 border-2 border-dashed rounded-lg">
           <p className="text-muted-foreground">You haven't added any products yet.</p>
           <p className="text-sm text-muted-foreground">Click "Add Product" to get started.</p>
         </div>
       )}
+      
       {products && products.length > 0 && (
         <Table>
           <TableHeader>

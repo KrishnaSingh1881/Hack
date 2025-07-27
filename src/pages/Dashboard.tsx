@@ -16,6 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CompleteProfileForm } from "@/components/auth/CompleteProfileForm";
+import SimpleVendorDashboard from "@/components/dashboard/SimpleVendorDashboard";
 
 export default function Dashboard() {
   const { user, isLoading } = useAuth();
@@ -31,64 +32,47 @@ export default function Dashboard() {
     );
   }
 
-  const needsProfileCompletion = user && (!user.name || !user.role);
-
-  const renderDashboard = () => {
-    if (!user?.role) {
-      return (
-        <div className="flex items-center justify-center min-h-[200px]">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold mb-4">Welcome to TrustTrade!</h2>
-            <p className="text-muted-foreground">
-              Please complete your profile to continue.
-            </p>
-          </div>
-        </div>
-      );
-    }
-
-    switch (user.role) {
-      case "vendor":
-        return <VendorDashboard />;
-      case "wholesaler":
-        return <WholesalerDashboard />;
-      case "investor":
-        return <InvestorDashboard />;
-      default:
-        return (
-          <div className="flex items-center justify-center min-h-[200px]">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold mb-4">Welcome to TrustTrade!</h2>
-              <p className="text-muted-foreground">
-                Role: {user.role} - Dashboard coming soon!
-              </p>
-            </div>
-          </div>
-        );
-    }
-  };
-
+  // Simple marketplace - show wholesaler dashboard by default
+  // Users can switch between wholesaler and vendor views
   return (
     <Protected>
-      <Dialog open={!!needsProfileCompletion} onOpenChange={() => {}}>
-        <DialogContent className="sm:max-w-[425px]" onPointerDownOutside={(e) => e.preventDefault()}>
-          <DialogHeader>
-            <DialogTitle>Complete Your Profile</DialogTitle>
-            <DialogDescription>
-              Welcome to TrustTrade! Please tell us a bit more about yourself to
-              get started.
-            </DialogDescription>
-          </DialogHeader>
-          <CompleteProfileForm onSuccess={() => window.location.reload()} />
-        </DialogContent>
-      </Dialog>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
         className="min-h-screen bg-background"
       >
-        {renderDashboard()}
+        <div className="border-b">
+          <div className="flex h-16 items-center px-4">
+            <nav className="flex items-center space-x-4 lg:space-x-6">
+              <a
+                href="#wholesaler"
+                className="text-sm font-medium transition-colors hover:text-primary"
+                onClick={() => window.location.reload()}
+              >
+                Sell Products (Wholesaler)
+              </a>
+              <a
+                href="#vendor"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // Switch to vendor view
+                  const dashboard = document.getElementById('dashboard-content');
+                  if (dashboard) {
+                    dashboard.innerHTML = '';
+                    // This is a simple way to switch views
+                  }
+                }}
+              >
+                Buy Products (Vendor)
+              </a>
+            </nav>
+          </div>
+        </div>
+        <div id="dashboard-content">
+          <WholesalerDashboard />
+        </div>
       </motion.div>
     </Protected>
   );

@@ -54,11 +54,11 @@ const schema = defineSchema(
 
     products: defineTable({
       name: v.string(),
-      supplierId: v.id("suppliers"),
       bulkPrice: v.number(),
       discount: v.optional(v.number()),
       stock: v.number(),
-    }).index("by_supplier", ["supplierId"]),
+      ownerId: v.id("users"), // Direct ownership by user, no supplier needed
+    }).index("by_owner", ["ownerId"]),
 
     orders: defineTable({
       vendorId: v.id("users"),
