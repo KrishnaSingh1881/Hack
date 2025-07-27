@@ -1,120 +1,158 @@
-import { internalMutation } from "../_generated/server";
-import { v } from "convex/values";
 import { ROLES } from "../schema";
-import { internal } from "../_generated/api";
+import { internalMutation } from "../_generated/server";
+import { TableNames } from "../_generated/dataModel";
 
 export const createAll = internalMutation({
-  args: {},
   handler: async (ctx) => {
-    // Clean up previous dummy data if needed (optional)
-    // Note: This is destructive and should be used carefully.
-    // const allUsers = await ctx.db.query("users").collect();
-    // await Promise.all(allUsers.map(u => ctx.db.delete(u._id)));
-    // ... delete from other tables
+    // Clear existing data to avoid duplicates
+    const tables: TableNames[] = [
+      "users",
+      "suppliers", 
+      "products",
+      "groupBuys",
+      "loanRequests",
+      "communityItems",
+      "reviews",
+      "orders",
+      "messages",
+    ];
+    for (const table of tables) {
+      const docs = await ctx.db.query(table).collect();
+      await Promise.all(docs.map((doc) => ctx.db.delete(doc._id)));
+    }
 
-    // --- Create Users ---
+    // --- VENDORS ---
     const vendor1Id = await ctx.db.insert("users", {
-      name: "Ravi Kumar",
-      email: "ravi.k@example.com",
+      name: "Raju's Chaat Corner",
+      email: "raju.chaat@example.com",
       role: ROLES.VENDOR,
       trustScore: 85,
     });
     const vendor2Id = await ctx.db.insert("users", {
-      name: "Priya Sharma",
-      email: "priya.s@example.com",
+      name: "Priya's Vada Pav",
+      email: "priya.vada@example.com", 
       role: ROLES.VENDOR,
       trustScore: 92,
     });
-    const wholesalerId = await ctx.db.insert("users", {
-      name: "Global Textiles",
-      email: "contact@globaltextiles.com",
+    const vendor3Id = await ctx.db.insert("users", {
+      name: "Sanjay's Samosas",
+      email: "sanjay.samosa@example.com",
+      role: ROLES.VENDOR,
+      trustScore: 78,
+    });
+
+    // --- WHOLESALERS ---
+    const wholesaler1Id = await ctx.db.insert("users", {
+      name: "Mumbai Masala Co.",
+      email: "contact@mumbaimasala.com",
       role: ROLES.WHOLESALER,
     });
-    const investorId = await ctx.db.insert("users", {
-      name: "Anjali Mehta",
+    const wholesaler2Id = await ctx.db.insert("users", {
+      name: "Delhi Daily Grocers",
+      email: "sales@delhigrocers.com",
+      role: ROLES.WHOLESALER,
+    });
+
+    // --- INVESTORS ---
+    const investor1Id = await ctx.db.insert("users", {
+      name: "Anjali Investments",
       email: "anjali.m@invest.com",
       role: ROLES.INVESTOR,
     });
 
-    console.log("Created sample users.");
-
-    // --- Create Supplier and Products ---
-    const supplierId = await ctx.db.insert("suppliers", {
-      name: "Mumbai Fabrics Co.",
-      location: { lat: 19.076, lng: 72.8777 },
-      deliveryRadius: 100,
-      ownerId: wholesalerId,
+    // --- SUPPLIERS (Owned by Wholesalers) ---
+    const supplier1Id = await ctx.db.insert("suppliers", {
+      name: "Mumbai Masala Co. Warehouse",
+      location: { lat: 19.076, lng: 72.8777 }, // Mumbai
+      deliveryRadius: 50,
+      ownerId: wholesaler1Id,
+    });
+    const supplier2Id = await ctx.db.insert("suppliers", {
+      name: "Delhi Daily Grocers Depot",
+      location: { lat: 28.7041, lng: 77.1025 }, // Delhi
+      deliveryRadius: 75,
+      ownerId: wholesaler2Id,
     });
 
-    const product1Id = await ctx.db.insert("products", {
-      name: "Premium Cotton (per meter)",
-      supplierId: supplierId,
-      bulkPrice: 8.5,
-      discount: 0.1, // 10% discount
+    // --- PRODUCTS ---
+    const potatoId = await ctx.db.insert("products", {
+      name: "Potatoes (per kg)",
+      supplierId: supplier2Id,
+      bulkPrice: 30,
       stock: 5000,
     });
-
-    const product2Id = await ctx.db.insert("products", {
-      name: "Silk Blend (per meter)",
-      supplierId: supplierId,
-      bulkPrice: 15.0,
-      stock: 2500,
+    const besanId = await ctx.db.insert("products", {
+      name: "Gram Flour (Besan) (per kg)",
+      supplierId: supplier1Id,
+      bulkPrice: 80,
+      stock: 2000,
+    });
+    await ctx.db.insert("products", {
+      name: "Cooking Oil (per litre)",
+      supplierId: supplier1Id,
+      bulkPrice: 150,
+      stock: 1500,
+    });
+    await ctx.db.insert("products", {
+      name: "Onions (per kg)",
+      supplierId: supplier2Id,
+      bulkPrice: 40,
+      stock: 3000,
+    });
+    await ctx.db.insert("products", {
+      name: "Mixed Spices (Chaat Masala) (per kg)",
+      supplierId: supplier1Id,
+      bulkPrice: 400,
+      stock: 500,
     });
 
-    console.log("Created sample supplier and products.");
-
-    // --- Create Group Buys ---
+    // --- GROUP BUYS ---
     await ctx.db.insert("groupBuys", {
-      productId: product1Id,
+      productId: potatoId,
       targetQuantity: 500,
       currentQuantity: 120,
-      pricePerUnit: 7.65, // Price with discount
-      participants: [vendor1Id],
+      pricePerUnit: 25,
+      participants: [vendor1Id, vendor2Id],
       status: "open",
       createdBy: vendor1Id,
     });
-
     await ctx.db.insert("groupBuys", {
-      productId: product2Id,
+      productId: besanId,
       targetQuantity: 200,
-      currentQuantity: 180,
-      pricePerUnit: 15.0,
-      participants: [vendor1Id, vendor2Id],
-      status: "open",
+      currentQuantity: 200,
+      pricePerUnit: 75,
+      participants: [vendor1Id, vendor2Id, vendor3Id],
+      status: "closed",
       createdBy: vendor2Id,
     });
 
-    console.log("Created sample group buys.");
-
-    // --- Create Loan Requests ---
-    await ctx.db.insert("loanRequests", {
-      vendorId: vendor1Id,
-      amount: 1500,
-      repaymentStatus: "pending",
-    });
+    // --- LOAN REQUESTS ---
     await ctx.db.insert("loanRequests", {
       vendorId: vendor2Id,
-      amount: 2500,
+      amount: 25000,
       repaymentStatus: "pending",
     });
+    await ctx.db.insert("loanRequests", {
+      vendorId: vendor3Id,
+      amount: 15000,
+      repaymentStatus: "pending",
+      investorId: investor1Id,
+    });
 
-    console.log("Created sample loan requests.");
-
-    // --- Create Community Items ---
+    // --- COMMUNITY ITEMS ---
     await ctx.db.insert("communityItems", {
       vendorId: vendor1Id,
-      itemName: "Surplus Blue Dye (5L)",
-      quantity: 1,
+      itemName: "Extra Mint Chutney",
+      quantity: 5,
       type: "exchange",
     });
     await ctx.db.insert("communityItems", {
-      vendorId: vendor2Id,
-      itemName: "Need 500 Zippers",
-      quantity: 500,
+      vendorId: vendor3Id,
+      itemName: "Need fresh Paneer (5kg)",
+      quantity: 5,
       type: "request",
     });
 
-    console.log("Created sample community items.");
-    return "Dummy data created successfully!";
+    console.log("Dummy data created successfully!");
   },
 });
