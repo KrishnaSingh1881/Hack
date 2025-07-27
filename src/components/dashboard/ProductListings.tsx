@@ -35,6 +35,7 @@ import { z } from "zod";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Doc } from "@/convex/_generated/dataModel";
+import { formatCurrency } from "@/lib/i18n";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Product name is required." }),
@@ -224,7 +225,7 @@ export default function ProductListings() {
             {products.map((product: Doc<"products">) => (
               <TableRow key={product._id}>
                 <TableCell>{product.name}</TableCell>
-                <TableCell>${product.bulkPrice.toFixed(2)}</TableCell>
+                <TableCell>{formatCurrency(product.bulkPrice)}</TableCell>
                 <TableCell>{product.discount || 0}%</TableCell>
                 <TableCell>{product.stock}</TableCell>
               </TableRow>

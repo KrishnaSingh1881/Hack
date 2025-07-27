@@ -41,6 +41,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { formatCurrency } from "@/lib/i18n";
 
 const createGroupBuySchema = z.object({
   productId: z.string().min(1, { message: "Please select a product." }),
@@ -265,12 +266,12 @@ export default function GroupBuys() {
           <TableBody>
             {groupBuys.map((groupBuy) => {
               const progress = (groupBuy.currentQuantity / groupBuy.targetQuantity) * 100;
-              const isParticipant = groupBuy.participants.includes(user._id);
+              const isParticipant = groupBuy.participants.includes(user!._id);
               
               return (
                 <TableRow key={groupBuy._id}>
                   <TableCell>{groupBuy.productName}</TableCell>
-                  <TableCell>${groupBuy.pricePerUnit.toFixed(2)}</TableCell>
+                  <TableCell>{formatCurrency(groupBuy.pricePerUnit)}</TableCell>
                   <TableCell>
                     <div className="space-y-1">
                       <Progress value={progress} className="w-20" />

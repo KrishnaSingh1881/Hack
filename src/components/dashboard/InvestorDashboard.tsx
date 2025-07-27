@@ -26,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "../ThemeToggle";
+import { formatCurrency } from "@/lib/i18n";
 
 function LoanOpportunities() {
   const loanRequests = useQuery(api.loanRequests.getAllForInvestors);
@@ -70,7 +71,7 @@ function LoanOpportunities() {
                   <span>{request.vendorTrustScore}</span>
                 </div>
               </TableCell>
-              <TableCell>${request.amount.toFixed(2)}</TableCell>
+              <TableCell>{formatCurrency(request.amount)}</TableCell>
               <TableCell>
                 <Button size="sm" onClick={() => handleFundLoan(request._id)}>
                   Fund Loan
@@ -115,7 +116,7 @@ function MyPortfolio() {
           fundedLoans.map((loan) => (
             <TableRow key={loan._id}>
               <TableCell>{loan.vendorName}</TableCell>
-              <TableCell>${loan.amount.toFixed(2)}</TableCell>
+              <TableCell>{formatCurrency(loan.amount)}</TableCell>
               <TableCell>
                 <Badge
                   variant={

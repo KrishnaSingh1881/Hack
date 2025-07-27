@@ -45,6 +45,7 @@ import { api } from "@/convex/_generated/api";
 import { useMemo, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Doc } from "@/convex/_generated/dataModel";
+import { formatCurrency } from "@/lib/i18n";
 
 const loanRequestSchema = z.object({
   amount: z.coerce.number().positive({ message: "Amount must be positive." }),
@@ -169,7 +170,7 @@ function AllProductsList() {
             filteredAndSortedProducts.map((product: Doc<"products">) => (
               <TableRow key={product._id}>
                 <TableCell>{product.name}</TableCell>
-                <TableCell>${product.bulkPrice.toFixed(2)}</TableCell>
+                <TableCell>{formatCurrency(product.bulkPrice)}</TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>
                   <Button size="sm">View Details</Button>
